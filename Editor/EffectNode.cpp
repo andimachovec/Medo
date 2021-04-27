@@ -7,11 +7,14 @@
 #include <InterfaceKit.h>
 
 #include "EffectNode.h"
-#include "Language.h"
 #include "MedoWindow.h"
 #include "Project.h"
 #include "TimelineEdit.h"
 #include "Theme.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "EffectNode"
 
 MediaEffect *	EffectNode :: sCurrentMediaEffect = nullptr;
 BMessage *		EffectNode :: sMsgEffectSelected = nullptr;
@@ -33,7 +36,7 @@ public:
 		fEffectNode = effect;
 		fDragMessage = new BMessage(TimelineEdit::eMsgDragDropEffect);
 
-		fStringOffset.x = 0.5f*(frame.Width() - be_plain_font->StringWidth(GetText(TXT_DRAG_DROP)));
+		fStringOffset.x = 0.5f*(frame.Width() - be_plain_font->StringWidth(B_TRANSLATE("Drag")));
 		fStringOffset.y = be_plain_font->Size();
 	}
 	
@@ -50,7 +53,7 @@ public:
 		FillRect(frame);
 		MovePenTo(frame.left + fStringOffset.x, frame.top + fStringOffset.y);
 		SetHighColor(255, 255, 255);
-		DrawString(GetText(TXT_DRAG_DROP));
+		DrawString(B_TRANSLATE("Drag"));
 	}
 	
 	void MouseDown(BPoint point)
@@ -209,7 +212,7 @@ void EffectNode :: InitSwapTexturesCheckbox()
 {
 	BRect frame = Bounds();
 	mSwapTexturesCheckbox = new BCheckBox(BRect(180, frame.Height() - (50+B_V_SCROLL_BAR_WIDTH+2), 380, frame.Height() - (20+B_V_SCROLL_BAR_WIDTH+2)),
-										  "swap_textures", GetText(TXT_EFFECTS_COMMON_SWAP_TEXTURES), new BMessage(kMsgSwapTextureUnits));
+										  "swap_textures", B_TRANSLATE("Swap Textures"), new BMessage(kMsgSwapTextureUnits));
 	if (mEffectView)
 		mEffectView->AddChild(mSwapTexturesCheckbox);
 	else

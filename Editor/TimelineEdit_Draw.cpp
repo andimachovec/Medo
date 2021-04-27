@@ -12,12 +12,15 @@
 
 #include "AudioManager.h"
 #include "EffectNode.h"
-#include "Language.h"
 #include "Project.h"
 #include "RenderActor.h"
 #include "Theme.h"
 #include "TimelineEdit.h"
 #include "VideoManager.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "TimelineEdit_Draw"
 
 
 #if 0

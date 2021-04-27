@@ -16,13 +16,16 @@
 #include "CursorDefinitions.inc"
 #include "EffectNode.h"
 #include "EffectsWindow.h"
-#include "Language.h"
 #include "MediaUtility.h"
 #include "MedoWindow.h"
 #include "Project.h"
 #include "RenderActor.h"
 #include "TimelineEdit.h"
 #include "TimelineView.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "TimelineEdit"
 
 #if 0
 #define DEBUG(...)	do {printf(__VA_ARGS__);} while (0)
@@ -788,17 +791,17 @@ void TimelineEdit :: ContextMenuTrack(BPoint point)
 
 	BMenuItem *aMenuItem;
 
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_INSERT_TRACK_ABOVE), new BMessage(kMessageContextTrackInsertAbove));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Insert Track (Above)"), new BMessage(kMessageContextTrackInsertAbove));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_INSERT_TRACK_BELOW), new BMessage(kMessageContextTrackInsertBelow));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Insert Track (Below)"), new BMessage(kMessageContextTrackInsertBelow));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_MOVE_TRACK_UP), new BMessage(kMessageContextTrackMoveUp));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Move Track Up"), new BMessage(kMessageContextTrackMoveUp));
 	aPopUpMenu->AddItem(aMenuItem);
 	if ((gProject->mTimelineTracks.size() == 0) || (gProject->mTimelineTracks[0] == fContextTimelineTrack))
 		aMenuItem->SetEnabled(false);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_MOVE_TRACK_DOWN), new BMessage(kMessageContextTrackMoveDown));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Move Track Down"), new BMessage(kMessageContextTrackMoveDown));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_DELETE_TRACK), new BMessage(kMessageContextTrackDelete));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Delete Track"), new BMessage(kMessageContextTrackDelete));
 	aPopUpMenu->AddItem(aMenuItem);
 	if (gProject->mTimelineTracks.size() <= 1)
 		aMenuItem->SetEnabled(false);
@@ -823,49 +826,49 @@ void TimelineEdit :: ContextMenuClip(BPoint point)
 	BPopUpMenu *aPopUpMenu = new BPopUpMenu("ContextMenuClip", false, false);
 	aPopUpMenu->SetAsyncAutoDestruct(true);
 
-	BMenuItem *aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_SPLIT_CLIP), new BMessage(kMessageContextClipSplit));
+	BMenuItem *aMenuItem = new BMenuItem(B_TRANSLATE("Split Clip"), new BMessage(kMessageContextClipSplit));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_DELETE_CLIP), new BMessage(kMessageContextClipDeleteLeaveEffects));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Delete Clip"), new BMessage(kMessageContextClipDeleteLeaveEffects));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_DELETE_CLIP_AND_EFFECTS), new BMessage(kMessageContextClipDeleteRemoveEffects));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Delete Clip and Effects"), new BMessage(kMessageContextClipDeleteRemoveEffects));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_EDIT_CLIP_TAG), new BMessage(kMessageContextClipEditTag));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Edit Clip Tag"), new BMessage(kMessageContextClipEditTag));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_ADD_NOTE), new BMessage(kMessageContextClipAddNote));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Add Note"), new BMessage(kMessageContextClipAddNote));
 	aPopUpMenu->AddItem(aMenuItem);
 
 	const MediaClip &clip = fActiveClip.track->mClips[fActiveClip.clip_idx];
 	if (clip.mMediaSource->GetVideoTrack())
 	{
-		aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_ENABLE_VIDEO), new BMessage(kMessageContextClipEnableVideo));
+		aMenuItem = new BMenuItem(B_TRANSLATE("Enable Video"), new BMessage(kMessageContextClipEnableVideo));
 		if (clip.mVideoEnabled)
 			aMenuItem->SetMarked(true);
 		aPopUpMenu->AddItem(aMenuItem);
 	}
 	if (clip.mMediaSource->GetAudioTrack())
 	{
-		aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_ENABLE_AUDIO), new BMessage(kMessageContextClipEnableAudio));
+		aMenuItem = new BMenuItem(B_TRANSLATE("Enable Audio"), new BMessage(kMessageContextClipEnableAudio));
 		if (clip.mAudioEnabled)
 			aMenuItem->SetMarked(true);
 		aPopUpMenu->AddItem(aMenuItem);
 	}
 
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_CLIP_INFO), new BMessage(kMessageContextFileInfo));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Clip Info"), new BMessage(kMessageContextFileInfo));
 	aPopUpMenu->AddItem(aMenuItem);
 
 	//	Track items
 	aPopUpMenu->AddSeparatorItem();
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_INSERT_TRACK_ABOVE), new BMessage(kMessageContextTrackInsertAbove));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Insert Track (Above)"), new BMessage(kMessageContextTrackInsertAbove));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_INSERT_TRACK_BELOW), new BMessage(kMessageContextTrackInsertBelow));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Insert Track (Below)"), new BMessage(kMessageContextTrackInsertBelow));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_MOVE_TRACK_UP), new BMessage(kMessageContextTrackMoveUp));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Move Track Up"), new BMessage(kMessageContextTrackMoveUp));
 	aPopUpMenu->AddItem(aMenuItem);
 	if ((gProject->mTimelineTracks.size() == 0) || (gProject->mTimelineTracks[0] == fContextTimelineTrack))
 		aMenuItem->SetEnabled(false);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_MOVE_TRACK_DOWN), new BMessage(kMessageContextTrackMoveDown));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Move Track Down"), new BMessage(kMessageContextTrackMoveDown));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_DELETE_TRACK), new BMessage(kMessageContextTrackDelete));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Delete Track"), new BMessage(kMessageContextTrackDelete));
 	aPopUpMenu->AddItem(aMenuItem);
 	if (gProject->mTimelineTracks.size() <= 1)
 		aMenuItem->SetEnabled(false);
@@ -895,22 +898,22 @@ void TimelineEdit :: ContextMenuEffect(BPoint point)
 	const MediaEffect *effect = fActiveEffect.media_effect;
 	int64 frame_idx = effect->mTimelineFrameStart + fActiveEffect.frame_idx;
 
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_MATCH_CLIP_DURATION), new BMessage(kMessageContextEffectStretchClipLength));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Match Clip Duration"), new BMessage(kMessageContextEffectStretchClipLength));
 	aPopUpMenu->AddItem(aMenuItem);
 	aMenuItem->SetEnabled(fActiveEffect.track->mClips.size() > 0);
 
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_MOVE_EFFECT_DOWN), new BMessage(kMessageContextEffectPriorityDown));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Move Effect Down"), new BMessage(kMessageContextEffectPriorityDown));
 	aPopUpMenu->AddItem(aMenuItem);
 	aMenuItem->SetEnabled(effect->mPriority > 0);
 
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_MOVE_EFFECT_UP), new BMessage(kMessageContextEffectPriorityUp));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Move Effect Up"), new BMessage(kMessageContextEffectPriorityUp));
 	aPopUpMenu->AddItem(aMenuItem);
 	aMenuItem->SetEnabled(effect->mPriority != fActiveEffect.track->mNumberEffectLayers - 1);
 
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_DELETE_EFFECT), new BMessage(kMessageContextEffectDeleteEffect));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Delete Effect"), new BMessage(kMessageContextEffectDeleteEffect));
 	aPopUpMenu->AddItem(aMenuItem);
 
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_ENABLE_EFFECT), new BMessage(kMessageContextEffectEnable));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Enable Effect        E"), new BMessage(kMessageContextEffectEnable));
 	if (effect->mEnabled)
 		aMenuItem->SetMarked(true);
 	aPopUpMenu->AddItem(aMenuItem);
@@ -934,9 +937,9 @@ void TimelineEdit :: ContextMenuNote(BPoint point)
 
 	BMenuItem *aMenuItem;
 
-	aMenuItem= new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_EDIT_NOTE), new BMessage(kMessageContextNoteEdit));
+	aMenuItem= new BMenuItem(B_TRANSLATE("Edit Note"), new BMessage(kMessageContextNoteEdit));
 	aPopUpMenu->AddItem(aMenuItem);
-	aMenuItem = new BMenuItem(GetText(TXT_TIMELINE_CONTEXT_DELETE_NOTE), new BMessage(kMessageContextNoteDelete));
+	aMenuItem = new BMenuItem(B_TRANSLATE("Delete Note"), new BMessage(kMessageContextNoteDelete));
 	aPopUpMenu->AddItem(aMenuItem);
 
 	aPopUpMenu->SetTargetForItems(this);

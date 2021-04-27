@@ -16,12 +16,15 @@
 #include "rapidjson/error/en.h"
 
 #include "FileUtility.h"
-#include "Language.h"
 #include "MedoWindow.h"
 #include "PersistantWindow.h"
 #include "Project.h"
 #include "SettingsWindow.h"
 #include "Theme.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "SettingsWindow"
 
 static const char *kThemes[] =
 {
@@ -176,10 +179,10 @@ public:
 
 		//	Tab Appearance
 		{
-			BView *tab_appearance = new BView(BRect(bounds.left, bounds.top, bounds.right, bounds.bottom - TabHeight()), GetText(TXT_SETTINGS_APPEARANCE), B_FOLLOW_LEFT_TOP, B_WILL_DRAW | B_FRAME_EVENTS);
+			BView *tab_appearance = new BView(BRect(bounds.left, bounds.top, bounds.right, bounds.bottom - TabHeight()), B_TRANSLATE("Appearance"), B_FOLLOW_LEFT_TOP, B_WILL_DRAW | B_FRAME_EVENTS);
 
 			//	Theme popup
-			fAppearancePopupTheme = new BOptionPopUp(BRect(20, 20, 320, 60), "theme", GetText(TXT_SETTINGS_APPEARANCE_THEME), new BMessage(eMsgAppearanceTheme));
+			fAppearancePopupTheme = new BOptionPopUp(BRect(20, 20, 320, 60), "theme", B_TRANSLATE("Theme"), new BMessage(eMsgAppearanceTheme));
 			for (size_t i=0; i < sizeof(kThemes)/sizeof(char *); i++)
 			{
 				fAppearancePopupTheme->AddOption(GetText((LANGUAGE_TEXT)(TXT_SETTINGS_APPEARANCE_THEME_DARK + i)), i);
@@ -188,7 +191,7 @@ public:
 			tab_appearance->AddChild(fAppearancePopupTheme);
 
 			//	Language popup
-			fAppearancePopupLanguage = new BOptionPopUp(BRect(20, 70, 320, 110), "language", GetText(TXT_SETTINGS_APPEARANCE_LANGUAGE), new BMessage(eMsgAppearanceLanguage));
+			fAppearancePopupLanguage = new BOptionPopUp(BRect(20, 70, 320, 110), "language", B_TRANSLATE("Language"), new BMessage(eMsgAppearanceLanguage));
 			std::vector<BString *> available_languages;
 			gLanguageManager->GetAvailableLanguages(available_languages);
 			for (int i=0; i < (int)available_languages.size(); i++)
@@ -198,7 +201,7 @@ public:
 			fAppearancePopupLanguage->SelectOptionFor(gLanguageManager->GetCurrentLanguageIndex());
 			tab_appearance->AddChild(fAppearancePopupLanguage);
 
-			fAppearanceButtonApply = new BButton(BRect(20, 150, 200, 190), "apply", GetText(TXT_SETTINGS_APPEARANCE_RESTART), new BMessage(eMsgAppearanceApply));
+			fAppearanceButtonApply = new BButton(BRect(20, 150, 200, 190), "apply", B_TRANSLATE("Restart"), new BMessage(eMsgAppearanceApply));
 			tab_appearance->AddChild(fAppearanceButtonApply);
 			fAppearanceButtonApply->Hide();
 
@@ -207,10 +210,10 @@ public:
 
 		//	Tab Export
 		{
-			BView *tab_export = new BView(BRect(bounds.left, bounds.top, bounds.right, bounds.bottom - TabHeight()), GetText(TXT_SETTINGS_EXPORT), B_FOLLOW_LEFT_TOP, B_WILL_DRAW | B_FRAME_EVENTS);
+			BView *tab_export = new BView(BRect(bounds.left, bounds.top, bounds.right, bounds.bottom - TabHeight()), B_TRANSLATE("Export"), B_FOLLOW_LEFT_TOP, B_WILL_DRAW | B_FRAME_EVENTS);
 
 			//	Export BMediaKit
-			fExportCheckboxMediaKit = new BCheckBox(BRect(20, 20, 320, 60), "checkbox_media_kit", GetText(TXT_SETTINGS_EXPORT_USE_BMEDIA_KIT), new BMessage(eMsgExportMediaKit));
+			fExportCheckboxMediaKit = new BCheckBox(BRect(20, 20, 320, 60), "checkbox_media_kit", B_TRANSLATE("Export using BMediaKit"), new BMessage(eMsgExportMediaKit));
 			fExportCheckboxMediaKit->SetValue(sGlobalSettings.export_enable_media_kit);
 			tab_export->AddChild(fExportCheckboxMediaKit);
 

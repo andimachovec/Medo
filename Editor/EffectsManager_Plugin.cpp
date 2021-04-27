@@ -18,10 +18,13 @@
 #include "EffectsManager.h"
 #include "EffectNode.h"
 #include "FileUtility.h"
-#include "Language.h"
 #include "LanguageJson.h"
 
 #include "Effects/Effect_Plugin.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "EffectsManager_Plugin"
 
 static const std::vector<const char *>	kUniformTypes = {"sampler2D", "float", "vec2", "vec3", "vec4", "colour", "int", "timestamp", "interval", "resolution"};		//	Must match PluginUniform::UniformType
 static const std::vector<const char *> kGuiWidgets = {"slider", "checkbox", "vec2", "vec3", "vec4", "colour", "text"};												//	Must match PluginGuiWidget::GuiWidget

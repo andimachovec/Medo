@@ -9,7 +9,10 @@
 
 #include "EffectNode.h"
 #include "Project.h"
-#include "Language.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "TimelineTrack"
 
 static int kTrackCreationIndex = 0;
 
@@ -28,7 +31,7 @@ TimelineTrack :: TimelineTrack()
 		kTrackCreationIndex = 0;
 
 	char buffer[32];
-	sprintf(buffer, "%s#%lu", GetText(TXT_TIMELINE_TRACK), ++kTrackCreationIndex);
+	sprintf(buffer, "%s#%lu", B_TRANSLATE("Track"), ++kTrackCreationIndex);
 	mName.SetTo(buffer);
 }
 

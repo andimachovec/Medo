@@ -21,7 +21,6 @@ extern "C" {
 
 #include "Project.h"
 #include "AudioManager.h"
-#include "Language.h"
 #include "ExportMediaWindow.h"
 #include "ExportMedia_ffmpeg.h"
 #include "Actor/Actor.h"
@@ -447,7 +446,12 @@ void Export_ffmpeg :: BuildAudioCodecOptions()
 extern "C" {
 #include <libavutil/timestamp.h>
 #include <libswresample/swresample.h>
-}
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "ExportMedia_ffmpeg"
+
+
 
 #define SCALE_FLAGS			SWS_BICUBIC
 

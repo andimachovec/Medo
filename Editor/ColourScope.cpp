@@ -11,10 +11,13 @@
 #include <app/MessageQueue.h>
 
 #include "ColourScope.h"
-#include "Language.h"
 #include "MedoWindow.h"
 #include "PersistantWindow.h"
 #include "Project.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "ColourScope"
 
 /*************************************
 	ScopeView
@@ -314,11 +317,11 @@ public:
 			BPopUpMenu *aPopUpMenu = new BPopUpMenu("ContextMenuColourScope", false, false);
 			aPopUpMenu->SetAsyncAutoDestruct(true);
 
-			BMenuItem *aMenuItem = new BMenuItem(GetText(TXT_COLOUR_SCOPE_SEPARATE_COLOURS), new BMessage(ScopeMessage::eMsgHistogramSeparate));
+			BMenuItem *aMenuItem = new BMenuItem(B_TRANSLATE("Separate Colours"), new BMessage(ScopeMessage::eMsgHistogramSeparate));
 			if (fScopeType == ScopeType::eScopeHistogramSeparate)
 				aMenuItem->SetMarked(true);
 			aPopUpMenu->AddItem(aMenuItem);
-			aMenuItem = new BMenuItem(GetText(TXT_COLOUR_SCOPE_UNIFIED_COLOURS), new BMessage(ScopeMessage::eMsgHistogramUnified));
+			aMenuItem = new BMenuItem(B_TRANSLATE("Unified Colours"), new BMessage(ScopeMessage::eMsgHistogramUnified));
 			if (fScopeType == ScopeType::eScopeHistogramUnified)
 				aMenuItem->SetMarked(true);
 			aPopUpMenu->AddItem(aMenuItem);

@@ -12,10 +12,13 @@
 #include "Gui/DualSlider.h"
 
 #include "AudioMixer.h"
-#include "Language.h"
 #include "PersistantWindow.h"
 #include "Project.h"
 #include "Theme.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "AudioMixer"
 
 enum kMixerMessages
 {
@@ -41,7 +44,7 @@ public:
 		for (auto &i : gProject->mTimelineTracks)
 		{
 			DualSlider *slider = new DualSlider(BRect(offset, 16, offset+kDualSliderOffset + 32, 16+400), nullptr, i->mName.String(), new BMessage(eMsgSlider), 0, 200,
-												GetText(TXT_EFFECTS_COMMON_L), GetText(TXT_EFFECTS_COMMON_R));
+												B_TRANSLATE("L"), B_TRANSLATE("R"));
 			AddChild(slider);
 			slider->SetValue(0, 100*i->mAudioLevels[0]);
 			slider->SetValue(1, 100*i->mAudioLevels[1]);
@@ -109,7 +112,7 @@ public:
 		for (auto &i : gProject->mTimelineTracks)
 		{
 			DualSlider *slider = new DualSlider(BRect(offset, 16, offset+70, 16+400), nullptr, i->mName.String(), new BMessage(eMsgSlider), 0, 200,
-												GetText(TXT_EFFECTS_COMMON_L), GetText(TXT_EFFECTS_COMMON_R));
+												B_TRANSLATE("L"), B_TRANSLATE("R"));
 			AddChild(slider);
 			slider->SetValue(0, 100*i->mAudioLevels[0]);
 			slider->SetValue(1, 100*i->mAudioLevels[1]);

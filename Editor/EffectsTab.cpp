@@ -22,9 +22,12 @@
 #include "EffectsWindow.h"
 #include "EffectListItem.h"
 #include "EffectNode.h"
-#include "Language.h"
 #include "TimelineEdit.h"
 #include "Theme.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "EffectsTab"
 
 EffectsManager	*gEffectsManager = nullptr;
 
@@ -125,7 +128,7 @@ public:
 	DESCRIPTION:	Constructor
 */
 EffectsTab :: EffectsTab(BRect tab_frame)
-	: BView(tab_frame, GetText(TXT_TAB_EFFECTS), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE)
+	: BView(tab_frame, B_TRANSLATE("Effects"), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE)
 {
 	BScreen screen;
 

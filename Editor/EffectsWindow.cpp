@@ -8,10 +8,13 @@
 
 #include "EffectNode.h"
 #include "EffectsWindow.h"
-#include "Language.h"
 #include "MedoWindow.h"
 #include "PersistantWindow.h"
 #include "Project.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "EffectsWindow"
 
 EffectsWindow * EffectsWindow :: sWindowInstance = nullptr;
 

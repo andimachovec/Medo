@@ -18,11 +18,14 @@
 #include "EffectNode.h"
 #include "EffectListItem.h"
 #include "TextTab.h"
-#include "Language.h"
 #include "EffectsManager.h"
 #include "EffectsTab.h"
 #include "TimelineEdit.h"
 #include "Theme.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "TextTab"
 
 /****************************
 	DraggerListView
@@ -72,7 +75,7 @@ static int sort_text_nodes(const void *a, const void *b)
 	DESCRIPTION:	Constructor
 */
 TextTab :: TextTab(BRect tab_frame, EffectsTab *effects_tab)
-	: BView(tab_frame, GetText(TXT_TAB_TEXT), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_FRAME_EVENTS)
+	: BView(tab_frame, B_TRANSLATE("Text"), B_FOLLOW_LEFT | B_FOLLOW_TOP, B_WILL_DRAW | B_FRAME_EVENTS)
 {
 	fEffectsTab = effects_tab;
 

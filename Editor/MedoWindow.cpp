@@ -22,7 +22,6 @@
 #include "EffectsTab.h"
 #include "EffectsWindow.h"
 #include "ExportMediaWindow.h"
-#include "Language.h"
 #include "MediaSource.h"
 #include "MonitorWindow.h"
 #include "OutputView.h"
@@ -39,6 +38,10 @@
 
 
 #include "MedoWindow.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "MedoWindow"
 
 MedoWindow * MedoWindow::sMedoWindow = nullptr;
 
@@ -71,7 +74,7 @@ MedoWindow :: MedoWindow()
 	gLanguageManager = new LanguageManager;
 
 	LoadSettings();
-	SetTitle(GetText(TXT_MENU_MEDO));
+	SetTitle(B_TRANSLATE("Medo"));
 
 	fProject = new Project;
 	CreateFilePanel();
@@ -94,59 +97,59 @@ MedoWindow :: MedoWindow()
 	AddChild(fMenuBar);
 	const float menu_height = fMenuBar->Frame().Height();
 	
-	BMenu *medo_menu = new BMenu(GetText(TXT_MENU_MEDO));
+	BMenu *medo_menu = new BMenu(B_TRANSLATE("Medo"));
 	fMenuBar->AddItem(medo_menu);
-	medo_menu->AddItem(new BMenuItem(GetText(TXT_MENU_MEDO_ABOUT), new BMessage(eMsgMenuMedoAbout)));
-	medo_menu->AddItem(new BMenuItem(GetText(TXT_MENU_MEDO_SETTINGS), new BMessage(eMsgMenuMedoSettings), '.'));
-	medo_menu->AddItem(new BMenuItem(GetText(TXT_MENU_MEDO_QUIT), new BMessage(B_QUIT_REQUESTED), 'Q'));
+	medo_menu->AddItem(new BMenuItem(B_TRANSLATE("About"), new BMessage(eMsgMenuMedoAbout)));
+	medo_menu->AddItem(new BMenuItem(B_TRANSLATE("Settings"), new BMessage(eMsgMenuMedoSettings), '.'));
+	medo_menu->AddItem(new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), 'Q'));
 	
-	BMenu *menu_project = new BMenu(GetText(TXT_MENU_PROJECT));
+	BMenu *menu_project = new BMenu(B_TRANSLATE("Project"));
 	fMenuBar->AddItem(menu_project);
-	menu_project->AddItem(new BMenuItem(GetText(TXT_MENU_PROJECT_NEW), new BMessage(eMsgMenuProjectNew), 'N'));
-	menu_project->AddItem(new BMenuItem(GetText(TXT_MENU_PROJECT_OPEN), new BMessage(eMsgMenuProjectOpen), 'O'));
-	menu_project->AddItem(new BMenuItem(GetText(TXT_MENU_PROJECT_SAVE), new BMessage(eMsgMenuProjectSave), 'S'));
-	menu_project->AddItem(new BMenuItem(GetText(TXT_MENU_PROJECT_SETTINGS), new BMessage(eMsgMenuProjectSettings)));
+	menu_project->AddItem(new BMenuItem(B_TRANSLATE("New Project"), new BMessage(eMsgMenuProjectNew), 'N'));
+	menu_project->AddItem(new BMenuItem(B_TRANSLATE("Open Project"), new BMessage(eMsgMenuProjectOpen), 'O'));
+	menu_project->AddItem(new BMenuItem(B_TRANSLATE("Save Project"), new BMessage(eMsgMenuProjectSave), 'S'));
+	menu_project->AddItem(new BMenuItem(B_TRANSLATE("Project Settings"), new BMessage(eMsgMenuProjectSettings)));
 	menu_project->AddSeparatorItem();
-	menu_project->AddItem(new BMenuItem(GetText(TXT_MENU_PROJECT_ADD_SOURCE), new BMessage(eMsgMenuProjectAddSource)));
+	menu_project->AddItem(new BMenuItem(B_TRANSLATE("Add Source (Media)"), new BMessage(eMsgMenuProjectAddSource)));
 	menu_project->AddSeparatorItem();
-	menu_project->AddItem(new BMenuItem(GetText(TXT_MENU_PROJECT_EXPORT_FFMPEG), new BMessage(eMsgMenuProjectExportFfmpeg), 'E'));
-	menu_project->AddItem(fMenuItemExportMediaKit = new BMenuItem(GetText(TXT_MENU_PROJECT_EXPORT_MEDIA_KIT), new BMessage(eMsgMenuProjectExportMediaKit)));
+	menu_project->AddItem(new BMenuItem(B_TRANSLATE("Export (ffmpeg)"), new BMessage(eMsgMenuProjectExportFfmpeg), 'E'));
+	menu_project->AddItem(fMenuItemExportMediaKit = new BMenuItem(B_TRANSLATE("Export (BMediaKit)"), new BMessage(eMsgMenuProjectExportMediaKit)));
 	fMenuItemExportMediaKit->SetEnabled(GetSettings()->export_enable_media_kit);
-	menu_project->AddItem(new BMenuItem(GetText(TXT_MENU_PROJECT_EXPORT_FRAME), new BMessage(eMsgMenuProjectExportFrame)));
+	menu_project->AddItem(new BMenuItem(B_TRANSLATE("Export Single Frame"), new BMessage(eMsgMenuProjectExportFrame)));
 
-	BMenu *menu_edit = new BMenu(GetText(TXT_MENU_EDIT));
+	BMenu *menu_edit = new BMenu(B_TRANSLATE("Edit"));
 	fMenuBar->AddItem(menu_edit);
-	fMenuItemEditUndo = new BMenuItem(GetText(TXT_MENU_EDIT_UNDO), new BMessage(eMsgMenuEditUndo), 'Z');
+	fMenuItemEditUndo = new BMenuItem(B_TRANSLATE("Undo"), new BMessage(eMsgMenuEditUndo), 'Z');
 	fMenuItemEditUndo->SetEnabled(false);
 	menu_edit->AddItem(fMenuItemEditUndo);
-	fMenuItemEditRedo = new BMenuItem(GetText(TXT_MENU_EDIT_REDO), new BMessage(eMsgMenuEditRedo), 'Y');
+	fMenuItemEditRedo = new BMenuItem(B_TRANSLATE("Redo"), new BMessage(eMsgMenuEditRedo), 'Y');
 	fMenuItemEditRedo->SetEnabled(false);
 	menu_edit->AddItem(fMenuItemEditRedo);
 	
-	BMenu *menu_view = new BMenu(GetText(TXT_MENU_VIEW));
+	BMenu *menu_view = new BMenu(B_TRANSLATE("View"));
 	fMenuBar->AddItem(menu_view);
-	BMenu *submenu_layout = new BMenu(GetText(TXT_MENU_VIEW_LAYOUT));
-	submenu_layout->AddItem(new BMenuItem(GetText(TXT_MENU_VIEW_LAYOUT_LARGE_PREVIEW), new BMessage(eMsgMenuViewLayout_1), '1'));
-	submenu_layout->AddItem(new BMenuItem(GetText(TXT_MENU_VIEW_LAYOUT_LARGE_TIMELINE), new BMessage(eMsgMenuViewLayout_2), '2'));
-	submenu_layout->AddItem(new BMenuItem(GetText(TXT_MENU_VIEW_LAYOUT_COLOUR_GRADING), new BMessage(eMsgMenuViewLayout_3), '3'));
-	submenu_layout->AddItem(new BMenuItem(GetText(TXT_MENU_VIEW_LAYOUT_AUDIO_EDIT), new BMessage(eMsgMenuViewLayout_4), '4'));
+	BMenu *submenu_layout = new BMenu(B_TRANSLATE("Layout"));
+	submenu_layout->AddItem(new BMenuItem(B_TRANSLATE("Large Preview"), new BMessage(eMsgMenuViewLayout_1), '1'));
+	submenu_layout->AddItem(new BMenuItem(B_TRANSLATE("Large Timeline"), new BMessage(eMsgMenuViewLayout_2), '2'));
+	submenu_layout->AddItem(new BMenuItem(B_TRANSLATE("Color Grading"), new BMessage(eMsgMenuViewLayout_3), '3'));
+	submenu_layout->AddItem(new BMenuItem(B_TRANSLATE("Audio Editing"), new BMessage(eMsgMenuViewLayout_4), '4'));
 	menu_view->AddItem(submenu_layout);
-	fMenuItemViewShowClipTags = new BMenuItem(GetText(TXT_MENU_VIEW_SHOW_CLIP_TAGS), new BMessage(eMsgMenuViewShowClipTags));
+	fMenuItemViewShowClipTags = new BMenuItem(B_TRANSLATE("Show Clip Tags"), new BMessage(eMsgMenuViewShowClipTags));
 	fMenuItemViewShowClipTags->SetMarked(true);
 	menu_view->AddItem(fMenuItemViewShowClipTags);
-	fMenuItemViewShowNotes = new BMenuItem(GetText(TXT_MENU_VIEW_SHOW_NOTES), new BMessage(eMsgMenuViewShowNotes));
+	fMenuItemViewShowNotes = new BMenuItem(B_TRANSLATE("Show Notes"), new BMessage(eMsgMenuViewShowNotes));
 	fMenuItemViewShowNotes->SetMarked(true);
 	menu_view->AddItem(fMenuItemViewShowNotes);
-	fMenuItemViewShowThumbnails = new BMenuItem(GetText(TXT_MENU_VIEW_SHOW_THUMBNAILS), new BMessage(eMsgMenuViewShowThumbnails));
+	fMenuItemViewShowThumbnails = new BMenuItem(B_TRANSLATE("Show Thumbnails"), new BMessage(eMsgMenuViewShowThumbnails));
 	fMenuItemViewShowThumbnails->SetMarked(true);
 	menu_view->AddItem(fMenuItemViewShowThumbnails);
 
-	BMenu *menu_tools = new BMenu(GetText(TXT_MENU_TOOLS));
+	BMenu *menu_tools = new BMenu(B_TRANSLATE("Tools"));
 	fMenuBar->AddItem(menu_tools);
-	menu_tools->AddItem(new BMenuItem(GetText(TXT_MENU_TOOLS_MONITOR), new BMessage(eMsgMenuToolsMonitor), 'F'));
-	menu_tools->AddItem(new BMenuItem(GetText(TXT_MENU_TOOLS_COLOUR_SCOPE), new BMessage(eMsgMenuToolsColourScope)));
-	menu_tools->AddItem(new BMenuItem(GetText(TXT_MENU_TOOLS_AUDIO_MIXER), new BMessage(eMsgMenuToolsAudioMixer)));
-	menu_tools->AddItem(new BMenuItem(GetText(TXT_MENU_TOOLS_SOUND_RECORDER), new BMessage(eMsgMenuToolsSoundRecorder)));
+	menu_tools->AddItem(new BMenuItem(B_TRANSLATE("Monitor"), new BMessage(eMsgMenuToolsMonitor), 'F'));
+	menu_tools->AddItem(new BMenuItem(B_TRANSLATE("Color Scope"), new BMessage(eMsgMenuToolsColourScope)));
+	menu_tools->AddItem(new BMenuItem(B_TRANSLATE("Audio Mixer"), new BMessage(eMsgMenuToolsAudioMixer)));
+	menu_tools->AddItem(new BMenuItem(B_TRANSLATE("Sound Recorder"), new BMessage(eMsgMenuToolsSoundRecorder)));
 	
     const float kFontFactor = be_plain_font->Size()/20.0f;
     BRect control_rect(kTabViewWidth*kFontFactor, menu_height, kTabViewWidth*kFontFactor + kControlViewWidth, kControlViewHeight+menu_height);
@@ -341,14 +344,14 @@ void MedoWindow :: MessageReceived(BMessage *msg)
 		case eMsgMenuMedoAbout:
 		{
 			if (fAboutWindow == nullptr)
-				fAboutWindow = new AboutWindow(BRect(64, 64, 800, 640), GetText(TXT_MENU_MEDO_ABOUT));
+				fAboutWindow = new AboutWindow(BRect(64, 64, 800, 640), B_TRANSLATE("About"));
 			fAboutWindow->Show();
 			break;	
 		}
 		case eMsgMenuMedoSettings:
 		{
 			if (!fSettingsWindow)
-				fSettingsWindow = new SettingsWindow(BRect(40, 40, 440, 340), GetText(TXT_MENU_MEDO_SETTINGS));
+				fSettingsWindow = new SettingsWindow(BRect(40, 40, 440, 340), B_TRANSLATE("Settings"));
 			//	Make sure SettingsWindow front most window (if already open)
 			if (fSettingsWindow->IsHidden())
 				fSettingsWindow->Show();
@@ -482,7 +485,7 @@ void MedoWindow :: MessageReceived(BMessage *msg)
 				else
 					frame.top = 32;
 
-				fMonitorWindow = new MonitorWindow(frame, GetText(TXT_MENU_TOOLS_MONITOR), fTimelineView->GetTimelinePlayer());
+				fMonitorWindow = new MonitorWindow(frame, B_TRANSLATE("Monitor"), fTimelineView->GetTimelinePlayer());
 			}
 			//	Make sure MonitorWindow front most window (if already open)
 			if (fMonitorWindow->IsHidden())
@@ -499,7 +502,7 @@ void MedoWindow :: MessageReceived(BMessage *msg)
 			{
 				BScreen screen;
 				BRect frame = screen.Frame();
-				fColourScope = new ColourScope(BRect(frame.right - 1000, frame.bottom - 1000, frame.right, frame.bottom), GetText(TXT_MENU_TOOLS_COLOUR_SCOPE));
+				fColourScope = new ColourScope(BRect(frame.right - 1000, frame.bottom - 1000, frame.right, frame.bottom), B_TRANSLATE("Color Scope"));
 			}
 			//	Make sure ColourScope front most window (if already open)
 			if (fColourScope->IsHidden())
@@ -513,7 +516,7 @@ void MedoWindow :: MessageReceived(BMessage *msg)
 
 		case eMsgMenuToolsAudioMixer:
 			if (fAudioMixer == nullptr)
-				fAudioMixer = new AudioMixer(BRect(32, 32, 32+640, 32+480), GetText(TXT_MENU_TOOLS_AUDIO_MIXER));
+				fAudioMixer = new AudioMixer(BRect(32, 32, 32+640, 32+480), B_TRANSLATE("Audio Mixer"));
 
 			//	Make sure AudioMixer front most window (if already open)
 			if (fAudioMixer->IsHidden())
@@ -709,7 +712,7 @@ void MedoWindow :: SetUserLayout(int layout)
 
 			float scope_height = (screen_height > 700 + 2*font_size + 700) ? 700 : screen_height - (700 + 2*font_size);
 			if (!fColourScope)
-				fColourScope = new ColourScope(BRect(2 + window_width + 8, screen_height - scope_height, 740-12, scope_height), GetText(TXT_MENU_TOOLS_COLOUR_SCOPE));
+				fColourScope = new ColourScope(BRect(2 + window_width + 8, screen_height - scope_height, 740-12, scope_height), B_TRANSLATE("Color Scope"));
 
 			fColourScope->MoveTo(2 + window_width + 8, screen_height - scope_height);
             fColourScope->ResizeTo(740*kFontFactor-12, scope_height);
@@ -740,7 +743,7 @@ void MedoWindow :: SetUserLayout(int layout)
 
 			float mixer_height = (screen_height > 700 + 2*font_size + 480) ? 480 : screen_height - (700 + 2*font_size);
 			if (!fAudioMixer)
-				fAudioMixer = new AudioMixer(BRect(2 + window_width + 8, screen_height - mixer_height, 740 - 12, mixer_height), GetText(TXT_MENU_TOOLS_AUDIO_MIXER));
+				fAudioMixer = new AudioMixer(BRect(2 + window_width + 8, screen_height - mixer_height, 740 - 12, mixer_height), B_TRANSLATE("Audio Mixer"));
 
 			fAudioMixer->MoveTo(2 + window_width + 8, screen_height - mixer_height);
             fAudioMixer->ResizeTo(740*kFontFactor-12, mixer_height);

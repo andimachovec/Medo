@@ -17,7 +17,6 @@
 #include "EffectsWindow.h"
 #include "EffectNode.h"
 #include "ExportMediaWindow.h"
-#include "Language.h"
 #include "MediaSource.h"
 #include "MedoWindow.h"
 #include "OutputView.h"
@@ -31,6 +30,10 @@
 #include "TimelineEdit.h"
 
 #include "3rdParty/stb_image_write.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "MedoWindow_ProjectIO"
 
 /*	FUNCTION:		MedoWindow :: CreateFilePanel
 	ARGS:			none
@@ -85,8 +88,8 @@ void MedoWindow :: ProjectIOMessage(BMessage *msg)
 								this,			//	refFilter 
 								true,			//	modal 
 								true);			//	hideWhenDone
-				fFilePanel->SetButtonLabel(B_DEFAULT_BUTTON, GetText(TXT_PROJECT_LOAD_OPEN_BUTTON));
-				fFilePanel->Window()->SetTitle(GetText(TXT_PROJECT_LOAD_PROJECT_TITLE));
+				fFilePanel->SetButtonLabel(B_DEFAULT_BUTTON, B_TRANSLATE("Open"));
+				fFilePanel->Window()->SetTitle(B_TRANSLATE("Load Medo Project:"));
 				fFilePanel->SetRefFilter(this);
 				ReplaceFilePanelCancelMessage();
 			}
@@ -110,8 +113,8 @@ void MedoWindow :: ProjectIOMessage(BMessage *msg)
 									this,			//	refFilter
 									true,			//	modal
 									true);			//	hideWhenDone
-				fFilePanel->SetButtonLabel(B_DEFAULT_BUTTON, GetText(TXT_PROJECT_SAVE_PROJECT_TITLE));
-				fFilePanel->Window()->SetTitle(GetText(TXT_PROJECT_SAVE_PROJECT_TITLE));
+				fFilePanel->SetButtonLabel(B_DEFAULT_BUTTON, B_TRANSLATE("Save Medo Project:"));
+				fFilePanel->Window()->SetTitle(B_TRANSLATE("Save Medo Project:"));
 				fFilePanel->SetRefFilter(this);
 				fFilePanel->SetTarget(this);
 				ReplaceFilePanelCancelMessage();
@@ -149,9 +152,9 @@ void MedoWindow :: ProjectIOMessage(BMessage *msg)
 					name.Append(".bmp");
 				path.Append(name);
 				if (ExportFrame(&path))
-					fStatusView->SetText(GetText(TXT_PROJECT_SAVE_PROJECT_SUCCESS));
+					fStatusView->SetText(B_TRANSLATE("Save project success"));
 				else
-					fStatusView->SetText(GetText(TXT_PROJECT_SAVE_PROJECT_ERROR));
+					fStatusView->SetText(B_TRANSLATE("Error saving project"));
 				return;
 			}
 
@@ -164,15 +167,15 @@ void MedoWindow :: ProjectIOMessage(BMessage *msg)
 			{
 				if (gProject->SaveProject(file))
 				{
-					fStatusView->SetText(GetText(TXT_PROJECT_SAVE_PROJECT_SUCCESS));
+					fStatusView->SetText(B_TRANSLATE("Save project success"));
 					SetMimeType(&path);
 				}
 				else
-					fStatusView->SetText(GetText(TXT_PROJECT_SAVE_PROJECT_ERROR));
+					fStatusView->SetText(B_TRANSLATE("Error saving project"));
 				fclose(file);
 			}
 			else
-				fStatusView->SetText(GetText(TXT_PROJECT_SAVE_PROJECT_ERROR));
+				fStatusView->SetText(B_TRANSLATE("Error saving project"));
 			break;
 		}
 		case eMsgMenuProjectAddSource:
@@ -189,8 +192,8 @@ void MedoWindow :: ProjectIOMessage(BMessage *msg)
 								this,			//	refFilter 
 								true,			//	modal 
 								true);			//	hideWhenDone
-				fFilePanel->SetButtonLabel(B_DEFAULT_BUTTON, GetText(TXT_PROJECT_ADD_MEDIA_BUTTON));
-				fFilePanel->Window()->SetTitle(GetText(TXT_PROJECT_ADD_MEDIA_TITLE));
+				fFilePanel->SetButtonLabel(B_DEFAULT_BUTTON, B_TRANSLATE("Add Media"));
+				fFilePanel->Window()->SetTitle(B_TRANSLATE("Add media file(s):"));
 				fFilePanel->SetRefFilter(this);
 				ReplaceFilePanelCancelMessage();
 			}
@@ -225,8 +228,8 @@ void MedoWindow :: ProjectIOMessage(BMessage *msg)
 									this,			//	refFilter
 									true,			//	modal
 									true);			//	hideWhenDone
-				fFilePanel->SetButtonLabel(B_DEFAULT_BUTTON, GetText(TXT_PROJECT_SAVE_BUTTON));
-				fFilePanel->Window()->SetTitle(GetText(TXT_MENU_PROJECT_EXPORT_FRAME));
+				fFilePanel->SetButtonLabel(B_DEFAULT_BUTTON, B_TRANSLATE("Save"));
+				fFilePanel->Window()->SetTitle(B_TRANSLATE("Export Single Frame"));
 				fFilePanel->SetRefFilter(this);
 				fFilePanel->SetTarget(this);
 				ReplaceFilePanelCancelMessage();
@@ -505,7 +508,7 @@ void MedoWindow :: LoadProject(const char *filename)
 		delete [] data;		//	TODO Add snapshot
 		if (success)
 		{
-			LoadProjectSuccess(GetText(TXT_PROJECT_LOAD_PROJECT_SUCCESS));
+			LoadProjectSuccess(B_TRANSLATE("Load Project Success"));
 		}
 		gProject->ResetSnapshots(true);
 	}

@@ -14,8 +14,11 @@
 #include "Project.h"
 #include "ProjectSettings.h"
 #include "MedoWindow.h"
-#include "Language.h"
 #include "Gui/BitmapCheckbox.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "Project_Settings"
 
 static const uint32 kMsgPopupVideoResolution		= 'psvr';
 static const uint32 kMsgPopupVideoFrameRate			= 'psvf';
@@ -60,7 +63,7 @@ static const uint32 kDefaultAudioSampleRate = 48000;
 	DESCRIPTION:	Constructor
 */
 ProjectSettings :: ProjectSettings(MedoWindow *parent)
-	: PersistantWindow(BRect(96, 96, 96+640, 96+540), GetText(TXT_PROJECT_SETTINGS_WINDOW), B_DOCUMENT_WINDOW, 0)
+	: PersistantWindow(BRect(96, 96, 96+640, 96+540), B_TRANSLATE("Project Settings"), B_DOCUMENT_WINDOW, 0)
 {
 	fMedoWindow = parent;
 
@@ -73,7 +76,7 @@ ProjectSettings :: ProjectSettings(MedoWindow *parent)
 	float start_y = kGuiOffset;
 
 	//	Video Settings
-	BStringView *title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, GetText(TXT_PROJECT_VIDEO_SETTINGS));
+	BStringView *title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, B_TRANSLATE("Video Settings"));
 	title->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	title->SetFont(be_bold_font);
 	AddChild(title);
@@ -81,7 +84,7 @@ ProjectSettings :: ProjectSettings(MedoWindow *parent)
 
 	//	Video Resolution
 	fOptionVideoResolution = new BOptionPopUp(BRect(20, start_y, 520, start_y+kGuiHeight), "video_resolution",
-											  GetText(TXT_PROJECT_VIDEO_RESOLUTION), new BMessage(kMsgPopupVideoResolution));
+											  B_TRANSLATE("Resolution"), new BMessage(kMsgPopupVideoResolution));
 	int default_resolution_index = 0;
 	for (int i=0; i < sizeof(kVideoResolutions)/sizeof(VIDEO_RESOLUTION); i++)
 	{
@@ -99,19 +102,19 @@ ProjectSettings :: ProjectSettings(MedoWindow *parent)
 	//	Custom Resolution
 	char text_buffer[32];
 	fEnableCustomVideoResolution = new BCheckBox(BRect(20, start_y, 260, start_y + kGuiHeight), nullptr,
-												 GetText(TXT_PROJECT_VIDEO_CUSTOM_RESOLUTION), new BMessage(kMsgCustomVideoResolution));
+												 B_TRANSLATE("Custom Resolution"), new BMessage(kMsgCustomVideoResolution));
 	fBackgroundView->AddChild(fEnableCustomVideoResolution);
 	fEnableCustomVideoResolution->SetValue(0);
 
 	fTextVideoCustomWidth = new BTextControl(BRect(280, start_y, 420, start_y + kGuiHeight), nullptr,
-											 GetText(TXT_PROJECT_VIDEO_CUSTOM_WIDTH), nullptr, new BMessage(kMsgCustomVideoWidth));
+											 B_TRANSLATE("Width"), nullptr, new BMessage(kMsgCustomVideoWidth));
 	sprintf(text_buffer, "%d", gProject->mResolution.width);
 	fTextVideoCustomWidth->SetText(text_buffer);
 	fTextVideoCustomWidth->SetEnabled(false);
 	fBackgroundView->AddChild(fTextVideoCustomWidth);
 
 	fTextVideoCustomHeight = new BTextControl(BRect(440, start_y, 580, start_y + kGuiHeight), nullptr,
-											  GetText(TXT_PROJECT_VIDEO_CUSTOM_HEIGHT), nullptr, new BMessage(kMsgCustomVideoHeight));
+											  B_TRANSLATE("Height"), nullptr, new BMessage(kMsgCustomVideoHeight));
 	sprintf(text_buffer, "%d", gProject->mResolution.height);
 	fTextVideoCustomHeight->SetText(text_buffer);
 	fTextVideoCustomHeight->SetEnabled(false);
@@ -130,14 +133,14 @@ ProjectSettings :: ProjectSettings(MedoWindow *parent)
 
 	//	Frame rate
 	fOptionVideoFrameRate = new BOptionPopUp(BRect(20, start_y, 480, start_y+kGuiHeight), "video_frame_rate",
-													  GetText(TXT_PROJECT_VIDEO_FRAME_RATE), new BMessage(kMsgPopupVideoFrameRate));
+													  B_TRANSLATE("Frame Rate"), new BMessage(kMsgPopupVideoFrameRate));
 	int default_frame_rate_selection = 0;
 	for (int i=0; i < sizeof(kVideoFrameRates)/sizeof(float); i++)
 	{
 		if (float(int(kVideoFrameRates[i])) == kVideoFrameRates[i])
-			sprintf(text_buffer, "%3.0f %s", kVideoFrameRates[i], GetText(TXT_PROJECT_VIDEO_FPS));
+			sprintf(text_buffer, "%3.0f %s", kVideoFrameRates[i], B_TRANSLATE("fps"));
 		else
-			sprintf(text_buffer, "%0.3f %s", kVideoFrameRates[i], GetText(TXT_PROJECT_VIDEO_FPS));
+			sprintf(text_buffer, "%0.3f %s", kVideoFrameRates[i], B_TRANSLATE("fps"));
 		fOptionVideoFrameRate->AddOption(text_buffer, i);
 
 		if (ymath::YIsEqual(gProject->mResolution.frame_rate, kVideoFrameRates[i]))
@@ -149,7 +152,7 @@ ProjectSettings :: ProjectSettings(MedoWindow *parent)
 
 #if 0
 	//	Audio settings
-	title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, GetText(TXT_PROJECT_AUDIO_SETTINGS));
+	title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, B_TRANSLATE("Audio Settings"));
 	title->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	title->SetFont(be_bold_font);
 	AddChild(title);
@@ -157,12 +160,12 @@ ProjectSettings :: ProjectSettings(MedoWindow *parent)
 
 	//	Audio sample rate
 	fOptionAudioSampleRate = new BOptionPopUp(BRect(20, start_y, 440, start_y+kGuiHeight), "audio_frame_rate",
-													  GetText(TXT_PROJECT_AUDIO_SAMPLE_RATE), new BMessage(kMsgPopupAudioSampleRate));
+													  B_TRANSLATE("Sample Rate"), new BMessage(kMsgPopupAudioSampleRate));
 	int default_sample_rate_selection = 0;
 	for (int i=0; i < sizeof(kAudioSampleRates)/sizeof(float); i++)
 	{
 		char buffer[32];
-		sprintf(buffer, "%d,%03d %s", kAudioSampleRates[i]/1000, kAudioSampleRates[i]%1000, GetText(TXT_PROJECT_AUDIO_HZ));
+		sprintf(buffer, "%d,%03d %s", kAudioSampleRates[i]/1000, kAudioSampleRates[i]%1000, B_TRANSLATE("Hz"));
 		fOptionAudioSampleRate->AddOption(buffer, i);
 
 		if (kDefaultAudioSampleRate == kAudioSampleRates[i])
@@ -174,28 +177,28 @@ ProjectSettings :: ProjectSettings(MedoWindow *parent)
 #endif
 
 	//	Video performance text
-	title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, GetText(TXT_PROJECT_SETTINGS_INTRO));
+	title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, B_TRANSLATE("Project Settings can be modified at any time."));
 	title->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	title->SetFont(be_bold_font);
 	AddChild(title);
 	start_y += kGuiHeight;
 	//	Line 2
-	title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, GetText(TXT_PROJECT_SETTINGS_VIDEO_1));
+	title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, B_TRANSLATE("Lowering the Video Resolution can speed up"));
 	title->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	title->SetFont(be_plain_font);
 	AddChild(title);
 	start_y += kGuiHeight;
 	//	Line 3
-	title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, GetText(TXT_PROJECT_SETTINGS_VIDEO_2));
+	title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, B_TRANSLATE("rendering of Preview frames."));
 	title->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	title->SetFont(be_plain_font);
 	AddChild(title);
 	start_y += 2*kGuiHeight + kGuiOffset;
 
 	//	Buttons
-	BButton *button_save = new BButton(BRect(430, start_y, 630, start_y+kGuiHeight), nullptr, GetText(TXT_APPLY), new BMessage(kMsgApply));
+	BButton *button_save = new BButton(BRect(430, start_y, 630, start_y+kGuiHeight), nullptr, B_TRANSLATE("Apply"), new BMessage(kMsgApply));
 	fBackgroundView->AddChild(button_save);
-	BButton *button_cancel = new BButton(BRect(220, start_y, 420, start_y+kGuiHeight), nullptr, GetText(TXT_CANCEL), new BMessage(kMsgCancel));
+	BButton *button_cancel = new BButton(BRect(220, start_y, 420, start_y+kGuiHeight), nullptr, B_TRANSLATE("Cancel"), new BMessage(kMsgCancel));
 	fBackgroundView->AddChild(button_cancel);
 	start_y += kGuiHeight + kGuiOffset;
 
@@ -372,7 +375,7 @@ void ProjectSettings :: ValidateTextField(BTextControl *control, uint32 what)
 	}
 
 	BAlert *alert = new BAlert(nullptr,
-							   even_error ? GetText(TXT_EXPORT_INVALID_EVEN_NUMBER) : GetText(TXT_EXPORT_INVALID_NUMBER),
+							   even_error ? B_TRANSLATE("Invalid input - only even numbers are valid.") : B_TRANSLATE("Invalid input - not a valid number."),
 							   "OK", nullptr, nullptr, B_WIDTH_AS_USUAL, B_WARNING_ALERT);
 	alert->Go();
 

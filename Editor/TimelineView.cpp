@@ -19,7 +19,6 @@
 
 #include "AudioManager.h"
 #include "EffectsWindow.h"
-#include "Language.h"
 #include "MedoWindow.h"
 #include "OutputView.h"
 #include "Project.h"
@@ -30,6 +29,10 @@
 #include "TimelinePosition.h"
 #include "TimelineView.h"
 #include "VideoManager.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "TimelineView"
 
 static const uint32 kMessageZoomSlider			= 'mtzs';
 static const uint32 kMessageCheckboxVideo		= 'mtcv';
@@ -188,23 +191,23 @@ TimelineView :: TimelineView(BRect frame, MedoWindow *parent)
 									 BTranslationUtils::GetBitmap("Resources/icon_play.png"),
 									 BTranslationUtils::GetBitmap("Resources/icon_pause.png"),
 									 new BMessage(kMessageButtonPlay));
-	fButtonPlay->SetToolTip(GetText(TXT_TIMELINE_TOOLTIP_PLAY));
+	fButtonPlay->SetToolTip(B_TRANSLATE("Play"));
 	fButtonPlayAb = new BitmapCheckbox(BRect(32+4, 0, 64+4, 32), "playAB",
 									 BTranslationUtils::GetBitmap("Resources/icon_play_ab.png"),
 									 BTranslationUtils::GetBitmap("Resources/icon_pause_ab.png"),
 									 new BMessage(kMessageButtonPlayAb));
-	fButtonPlayAb->SetToolTip(GetText(TXT_TIMELINE_TOOLTIP_PLAY_AB));
+	fButtonPlayAb->SetToolTip(B_TRANSLATE("Play A-B"));
 
 	fButtonFrameNext = new BitmapButton(BRect(32+4, 32+4, 64+4, 64+4), "frame_next",
 									 BTranslationUtils::GetBitmap("Resources/icon_skip_right.png"),
 									 BTranslationUtils::GetBitmap("Resources/icon_skip_right_down.png"),
 									 new BMessage(kMessageButtonFrameNext));
-	fButtonFrameNext->SetToolTip(GetText(TXT_TIMELINE_TOOLTIP_NEXT_FRAME));
+	fButtonFrameNext->SetToolTip(B_TRANSLATE("Next Frame"));
 	fButtonFramePrev = new BitmapButton(BRect(0, 32+4, 32, 64+4), "frame_prev",
 									 BTranslationUtils::GetBitmap("Resources/icon_skip_left.png"),
 									 BTranslationUtils::GetBitmap("Resources/icon_skip_left_down.png"),
 									 new BMessage(kMessageButtonFramePrev));
-	fButtonFramePrev->SetToolTip(GetText(TXT_TIMELINE_TOOLTIP_PREVIOUS_FRAME));
+	fButtonFramePrev->SetToolTip(B_TRANSLATE("Previous Frame"));
 	AddChild(fButtonPlay);
 	AddChild(fButtonPlayAb);
 	AddChild(fButtonFrameNext);

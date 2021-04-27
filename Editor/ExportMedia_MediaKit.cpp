@@ -14,11 +14,14 @@
 
 #include "Project.h"
 #include "AudioManager.h"
-#include "Language.h"
 #include "ExportMediaWindow.h"
 #include "ExportMedia_MediaKit.h"
 
 #include "RenderActor.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "ExportMedia_MediaKit"
 
 /*	FUNCTION:		Export_MediaKit :: Export_MediaKit
 	ARGS:			parent
@@ -108,7 +111,7 @@ void Export_MediaKit :: BuildFileFormatOptions()
 	else
 	{
 		//	Workaround for Haiku bug, when popup empty it will still display previous entry until clicked
-		mParent->fOptionFileFormat->AddOption(GetText(TXT_EXPORT_FILE_FORMAT_NONE), 0);
+		mParent->fOptionFileFormat->AddOption(B_TRANSLATE("None"), 0);
 		mParent->fOptionFileFormat->RemoveOptionAt(0);
 		FileFormatSelectionChanged();
 	}
@@ -161,7 +164,7 @@ void Export_MediaKit :: BuildVideoCodecOptions()
 	if (fFileFormatCookies.empty())
 	{
 		//	Workaround for Haiku bug, when popup empty it will still display previous entry until clicked
-		mParent->fOptionVideoCodec->AddOption(GetText(TXT_EXPORT_FILE_FORMAT_NONE), 0);
+		mParent->fOptionVideoCodec->AddOption(B_TRANSLATE("None"), 0);
 		mParent->fOptionVideoCodec->RemoveOptionAt(0);
 		return;
 	}
@@ -196,7 +199,7 @@ void Export_MediaKit :: BuildVideoCodecOptions()
 	else
 	{
 		//	Workaround for Haiku bug, when popup empty it will still display previous entry until clicked
-		mParent->fOptionVideoCodec->AddOption(GetText(TXT_EXPORT_FILE_FORMAT_NONE), 0);
+		mParent->fOptionVideoCodec->AddOption(B_TRANSLATE("None"), 0);
 		mParent->fOptionVideoCodec->RemoveOptionAt(0);
 	}
 }
@@ -213,7 +216,7 @@ void Export_MediaKit :: BuildAudioCodecOptions()
 	if (fFileFormatCookies.empty())
 	{
 		//	Workaround for Haiku bug, when popup empty it will still display previous entry until clicked
-		mParent->fOptionAudioCodec->AddOption(GetText(TXT_EXPORT_FILE_FORMAT_NONE), 0);
+		mParent->fOptionAudioCodec->AddOption(B_TRANSLATE("None"), 0);
 		mParent->fOptionAudioCodec->RemoveOptionAt(0);
 		return;
 	}
@@ -253,7 +256,7 @@ void Export_MediaKit :: BuildAudioCodecOptions()
 	else
 	{
 		//	Workaround for Haiku bug, when popup empty it will still display previous entry until clicked
-		mParent->fOptionAudioCodec->AddOption(GetText(TXT_EXPORT_FILE_FORMAT_NONE), 0);
+		mParent->fOptionAudioCodec->AddOption(B_TRANSLATE("None"), 0);
 		mParent->fOptionAudioCodec->RemoveOptionAt(0);
 	}
 }

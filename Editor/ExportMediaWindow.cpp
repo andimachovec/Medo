@@ -17,13 +17,16 @@
 #include "Yarra/Math/Math.h"
 #include "MedoWindow.h"
 #include "Project.h"
-#include "Language.h"
 #include "Gui/BitmapCheckbox.h"
 #include "Gui/ProgressBar.h"
 
 #include "ExportMediaWindow.h"
 #include "ExportMedia_MediaKit.h"
 #include "ExportMedia_ffmpeg.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "ExportMediaWindow"
 
 enum kExportWindowMessages
 {
@@ -93,7 +96,7 @@ static const uint32 kAudioNumberChannels[] = {1, 2};
 */
 ExportMediaWindow :: ExportMediaWindow(MedoWindow *parent, EXPORT_ENGINE engine)
 	: BWindow(BRect(128, 64, 128+640, 64+940),
-				engine == EXPORT_USING_FFMPEG ? GetText(TXT_MENU_PROJECT_EXPORT_FFMPEG) : GetText(TXT_MENU_PROJECT_EXPORT_MEDIA_KIT),
+				engine == EXPORT_USING_FFMPEG ? B_TRANSLATE("Export (ffmpeg)") : B_TRANSLATE("Export (BMediaKit)"),
 				B_TITLED_WINDOW, B_NOT_ZOOMABLE | B_NOT_RESIZABLE)
 {
 	fMedoWindow = parent;
@@ -207,16 +210,16 @@ void ExportMediaWindow :: PreprocessProject()
 */
 float ExportMediaWindow :: CreateFileFormatGui(float start_y)
 {
-	BStringView *title = new BStringView(BRect(20, start_y, 600, start_y + kGuiHeight), nullptr, GetText(TXT_EXPORT_FILE_FORMAT));
+	BStringView *title = new BStringView(BRect(20, start_y, 600, start_y + kGuiHeight), nullptr, B_TRANSLATE("File Format"));
 	title->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	title->SetFont(be_bold_font);
 	AddChild(title);
 	start_y += 50;
 
 	fEnableVideo = new BCheckBox(BRect(20, start_y, 200, start_y + kGuiHeight), "enable_video",
-								 GetText(TXT_EXPORT_ENABLE_VIDEO), new BMessage(kMsgEnableVideo));
+								 B_TRANSLATE("Video"), new BMessage(kMsgEnableVideo));
 	fEnableAudio = new BCheckBox(BRect(220, start_y, 400, start_y + kGuiHeight), "enable_audio",
-								 GetText(TXT_EXPORT_ENABLE_AUDIO), new BMessage(kMsgEnableAudio));
+								 B_TRANSLATE("Audio"), new BMessage(kMsgEnableAudio));
 	if (fHasVideo)
 		fEnableVideo->SetValue(1);
 	else
@@ -230,7 +233,7 @@ float ExportMediaWindow :: CreateFileFormatGui(float start_y)
 	start_y += kGuiHeight + kGuiOffset;
 
 	fOptionFileFormat = new BOptionPopUp(BRect(20, start_y, 480, start_y+kGuiHeight), "file_format",
-										 GetText(TXT_EXPORT_FILE_FORMAT), new BMessage(kMsgPopupFileFormat));
+										 B_TRANSLATE("File Format"), new BMessage(kMsgPopupFileFormat));
 	fBackgroundView->AddChild(fOptionFileFormat);
 	start_y += kGuiHeight + kGuiOffset;
 
@@ -244,7 +247,7 @@ float ExportMediaWindow :: CreateFileFormatGui(float start_y)
 */
 float ExportMediaWindow :: CreateVideoGui(float start_y)
 {
-	BStringView *title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, GetText(TXT_EXPORT_VIDEO_SETTINGS));
+	BStringView *title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, B_TRANSLATE("Video Settings"));
 	title->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	title->SetFont(be_bold_font);
 	AddChild(title);
@@ -253,7 +256,7 @@ float ExportMediaWindow :: CreateVideoGui(float start_y)
 	//	Check if video settings required
 	if (!fHasVideo)
 	{
-		BStringView *out_text = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, GetText(TXT_EXPORT_VIDEO_NO_SOURCES));
+		BStringView *out_text = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, B_TRANSLATE("No image"));
 		out_text->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 		AddChild(out_text);
 		start_y += kGuiHeight;
@@ -262,7 +265,7 @@ float ExportMediaWindow :: CreateVideoGui(float start_y)
 
 	//	Resolution
 	fOptionVideoResolution = new BOptionPopUp(BRect(20, start_y, 520, start_y+kGuiHeight), "video_resolution",
-											  GetText(TXT_EXPORT_VIDEO_RESOLUTION), new BMessage(kMsgPopupVideoResolution));
+											  B_TRANSLATE("Video Resolution"), new BMessage(kMsgPopupVideoResolution));
 	int default_resolution_index = 0;
 	for (int i=0; i < sizeof(kVideoResolutions)/sizeof(VIDEO_RESOLUTION); i++)
 	{
@@ -280,19 +283,19 @@ float ExportMediaWindow :: CreateVideoGui(float start_y)
 	//	Custom Resolution
 	char text_buffer[32];
 	fEnableCustomVideoResolution = new BCheckBox(BRect(20, start_y, 260, start_y + kGuiHeight), nullptr,
-												 GetText(TXT_EXPORT_VIDEO_CUSTOM_RESOLUTION), new BMessage(kMsgCustomVideoResolution));
+												 B_TRANSLATE("Custom Resolution"), new BMessage(kMsgCustomVideoResolution));
 	fBackgroundView->AddChild(fEnableCustomVideoResolution);
 	fEnableCustomVideoResolution->SetValue(0);
 
 	fTextVideoCustomWidth = new BTextControl(BRect(280, start_y, 420, start_y + kGuiHeight), nullptr,
-											 GetText(TXT_EXPORT_VIDEO_CUSTOM_WIDTH), nullptr, new BMessage(kMsgCustomVideoWidth));
+											 B_TRANSLATE("Width"), nullptr, new BMessage(kMsgCustomVideoWidth));
 	sprintf(text_buffer, "%d", gProject->mResolution.width);
 	fTextVideoCustomWidth->SetText(text_buffer);
 	fTextVideoCustomWidth->SetEnabled(false);
 	fBackgroundView->AddChild(fTextVideoCustomWidth);
 
 	fTextVideoCustomHeight = new BTextControl(BRect(440, start_y, 580, start_y + kGuiHeight), nullptr,
-											  GetText(TXT_EXPORT_VIDEO_CUSTOM_HEIGHT), nullptr, new BMessage(kMsgCustomVideoHeight));
+											  B_TRANSLATE("Height"), nullptr, new BMessage(kMsgCustomVideoHeight));
 	sprintf(text_buffer, "%d", gProject->mResolution.height);
 	fTextVideoCustomHeight->SetText(text_buffer);
 	fTextVideoCustomHeight->SetEnabled(false);
@@ -311,14 +314,14 @@ float ExportMediaWindow :: CreateVideoGui(float start_y)
 
 	//	Frame rate
 	fOptionVideoFrameRate = new BOptionPopUp(BRect(20, start_y, 480, start_y+kGuiHeight), "video_frame_rate",
-													  GetText(TXT_EXPORT_VIDEO_FRAME_RATE), new BMessage(kMsgPopupVideoFrameRate));
+													  B_TRANSLATE("Video Frame Rate"), new BMessage(kMsgPopupVideoFrameRate));
 	int default_frame_rate_selection = 0;
 	for (int i=0; i < sizeof(kVideoFrameRates)/sizeof(float); i++)
 	{
 		if (float(int(kVideoFrameRates[i])) == kVideoFrameRates[i])
-			sprintf(text_buffer, "%3.0f %s", kVideoFrameRates[i], GetText(TXT_EXPORT_VIDEO_FPS));
+			sprintf(text_buffer, "%3.0f %s", kVideoFrameRates[i], B_TRANSLATE("fps"));
 		else
-			sprintf(text_buffer, "%0.3f %s", kVideoFrameRates[i], GetText(TXT_EXPORT_VIDEO_FPS));
+			sprintf(text_buffer, "%0.3f %s", kVideoFrameRates[i], B_TRANSLATE("fps"));
 		fOptionVideoFrameRate->AddOption(text_buffer, i);
 
 		if (ymath::YIsEqual(gProject->mResolution.frame_rate, kVideoFrameRates[i]))
@@ -330,21 +333,21 @@ float ExportMediaWindow :: CreateVideoGui(float start_y)
 
 	//	Video codec
 	fOptionVideoCodec = new BOptionPopUp(BRect(20, start_y, 480, start_y+kGuiHeight), "video_codec",
-										 GetText(TXT_EXPORT_VIDEO_CODEC), new BMessage(kMsgPopupVideoCodec));
+										 B_TRANSLATE("Video Codec"), new BMessage(kMsgPopupVideoCodec));
 	//	BuildVideoCodecOptions() will populate popup
 	fBackgroundView->AddChild(fOptionVideoCodec);
 	start_y += kGuiHeight + kGuiOffset;
 
 	//	Video bitrate
 	fOptionVideoBitrate = new BOptionPopUp(BRect(20, start_y, 480, start_y+kGuiHeight), "video_bitrate",
-										   GetText(TXT_EXPORT_VIDEO_BITRATE), new BMessage(kMsgPopupVideoBitrate));
+										   B_TRANSLATE("Video Compression Bitrate"), new BMessage(kMsgPopupVideoBitrate));
 	int default_bitrate_index = 0;
 	for (int i=0; i < sizeof(kVideoBitrates)/sizeof(int32); i++)
 	{
 		if (kVideoBitrates[i] >= 1000)
-			sprintf(text_buffer, "%d,%03d %s", kVideoBitrates[i]/1000, kVideoBitrates[i]%1000, GetText(TXT_EXPORT_VIDEO_KBPS));
+			sprintf(text_buffer, "%d,%03d %s", kVideoBitrates[i]/1000, kVideoBitrates[i]%1000, B_TRANSLATE("Kbps"));
 		else
-			sprintf(text_buffer, "%d %s", kVideoBitrates[i], GetText(TXT_EXPORT_VIDEO_KBPS));
+			sprintf(text_buffer, "%d %s", kVideoBitrates[i], B_TRANSLATE("Kbps"));
 		fOptionVideoBitrate->AddOption(text_buffer, i);
 
 		if (kVideoBitrates[i] == kDefaultVideoBitrate)
@@ -356,11 +359,11 @@ float ExportMediaWindow :: CreateVideoGui(float start_y)
 
 	//	Custom bitrate
 	fEnableCustomVideoBitrate = new BCheckBox(BRect(20, start_y, 260, start_y+kGuiHeight), nullptr,
-											  GetText(TXT_EXPORT_VIDEO_CUSTOM_BITRATE), new BMessage(kMsgCustomVideoBitrateEnable));
+											  B_TRANSLATE("Custom Bitrate"), new BMessage(kMsgCustomVideoBitrateEnable));
 	fBackgroundView->AddChild(fEnableCustomVideoBitrate);
 	fEnableCustomVideoBitrate->SetValue(0);
 	fTextVideoCustomBitrate = new BTextControl(BRect(280, start_y, 480, start_y+kGuiHeight), nullptr,
-											   GetText(TXT_EXPORT_VIDEO_KBPS), nullptr, new BMessage(kMsgCustomVideoBitrateValue));
+											   B_TRANSLATE("Kbps"), nullptr, new BMessage(kMsgCustomVideoBitrateValue));
 	fBackgroundView->AddChild(fTextVideoCustomBitrate);
 	sprintf(text_buffer, "%d", kDefaultVideoBitrate);
 	fTextVideoCustomBitrate->SetText(text_buffer);
@@ -381,7 +384,7 @@ float ExportMediaWindow :: CreateVideoGui(float start_y)
 */
 float ExportMediaWindow :: CreateAudioGui(float start_y)
 {
-	BStringView *title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, GetText(TXT_EXPORT_AUDIO_SETTINGS));
+	BStringView *title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, B_TRANSLATE("Audio Settings"));
 	title->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	title->SetFont(be_bold_font);
 	AddChild(title);
@@ -390,7 +393,7 @@ float ExportMediaWindow :: CreateAudioGui(float start_y)
 	//	Check if video settings required
 	if (!fHasAudio)
 	{
-		BStringView *out_text = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, GetText(TXT_EXPORT_AUDIO_NO_SOURCES));
+		BStringView *out_text = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, B_TRANSLATE("No audio sources or effects."));
 		out_text->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 		AddChild(out_text);
 		start_y += kGuiHeight;
@@ -399,12 +402,12 @@ float ExportMediaWindow :: CreateAudioGui(float start_y)
 
 	//	Audio sample rate
 	fOptionAudioSampleRate = new BOptionPopUp(BRect(20, start_y, 440, start_y+kGuiHeight), "audio_frame_rate",
-													  GetText(TXT_EXPORT_AUDIO_SAMPLE_RATE), new BMessage(kMsgPopupAudioSampleRate));
+													  B_TRANSLATE("Audio Sample Rate"), new BMessage(kMsgPopupAudioSampleRate));
 	int default_sample_rate_selection = 0;
 	for (int i=0; i < sizeof(kAudioSampleRates)/sizeof(float); i++)
 	{
 		char buffer[32];
-		sprintf(buffer, "%d,%03d %s", kAudioSampleRates[i]/1000, kAudioSampleRates[i]%1000, GetText(TXT_EXPORT_AUDIO_HZ));
+		sprintf(buffer, "%d,%03d %s", kAudioSampleRates[i]/1000, kAudioSampleRates[i]%1000, B_TRANSLATE("Hz"));
 		fOptionAudioSampleRate->AddOption(buffer, i);
 
 		if (kDefaultAudioSampleRate == kAudioSampleRates[i])
@@ -415,7 +418,7 @@ float ExportMediaWindow :: CreateAudioGui(float start_y)
 
 	//	Audio Channel count
 	fOptionAudioChannelCount = new BOptionPopUp(BRect(460, start_y, 630, start_y+kGuiHeight), "audio_channels",
-													GetText(TXT_EXPORT_AUDIO_CHANNEL_COUNT), new BMessage(kMsgPopupAudioChannelCount));
+													B_TRANSLATE("Channels"), new BMessage(kMsgPopupAudioChannelCount));
 	int default_channel_count = 0;
 	for (int i=0; i < sizeof(kAudioNumberChannels)/sizeof(float); i++)
 	{
@@ -432,19 +435,19 @@ float ExportMediaWindow :: CreateAudioGui(float start_y)
 
 	// Audio codec
 	fOptionAudioCodec = new BOptionPopUp(BRect(20, start_y, 480, start_y+kGuiHeight), "audio_codec",
-										 GetText(TXT_EXPORT_AUDIO_CODEC), new BMessage(kMsgPopupAudioCodec));
+										 B_TRANSLATE("Audio Codec"), new BMessage(kMsgPopupAudioCodec));
 	//	BuildAudioCodecOptoins() will populate popup
 	fBackgroundView->AddChild(fOptionAudioCodec);
 	start_y += kGuiHeight + kGuiOffset;
 
 	//	Audio bitrate
 	fOptionAudioBitrate = new BOptionPopUp(BRect(20, start_y, 480, start_y+kGuiHeight), "audio_bitrate",
-										   GetText(TXT_EXPORT_AUDIO_BITRATE), new BMessage(kMsgPopupAudioBitrate));
+										   B_TRANSLATE("Audio Compression Bitrate"), new BMessage(kMsgPopupAudioBitrate));
 	int default_bitrate_index = 0;
 	char text_buffer[16];
 	for (int i=0; i < sizeof(kAudioBitrates)/sizeof(int32); i++)
 	{
-		sprintf(text_buffer, "%d %s", kAudioBitrates[i], GetText(TXT_EXPORT_AUDIO_KBPS));
+		sprintf(text_buffer, "%d %s", kAudioBitrates[i], B_TRANSLATE("Kbps"));
 		fOptionAudioBitrate->AddOption(text_buffer, i);
 
 		if (kDefaultAudioBitrate == kAudioBitrates[i])
@@ -456,11 +459,11 @@ float ExportMediaWindow :: CreateAudioGui(float start_y)
 
 	//	Custom bitrate
 	fEnableCustomAudioBitrate = new BCheckBox(BRect(20, start_y, 260, start_y+kGuiHeight), nullptr,
-											  GetText(TXT_EXPORT_AUDIO_CUSTOM_BITRATE), new BMessage(kMsgCustomAudioBitrateEnable));
+											  B_TRANSLATE("Custom Bitrate"), new BMessage(kMsgCustomAudioBitrateEnable));
 	fBackgroundView->AddChild(fEnableCustomAudioBitrate);
 	fEnableCustomAudioBitrate->SetValue(0);
 	fTextAudioCustomBitrate = new BTextControl(BRect(280, start_y, 480, start_y+kGuiHeight), nullptr,
-											   GetText(TXT_EXPORT_AUDIO_KBPS), nullptr, new BMessage(kMsgCustomAudioBitrateValue));
+											   B_TRANSLATE("Kbps"), nullptr, new BMessage(kMsgCustomAudioBitrateValue));
 	fBackgroundView->AddChild(fTextAudioCustomBitrate);
 	sprintf(text_buffer, "%d", kDefaultAudioBitrate);
 	fTextAudioCustomBitrate->SetText(text_buffer);
@@ -489,14 +492,14 @@ float ExportMediaWindow :: CreateFileSaveGui(float start_y)
 	if (!fHasVideo && !fHasAudio)
 		return start_y;
 
-	BStringView *title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, GetText(TXT_EXPORT_OUT_TITLE));
+	BStringView *title = new BStringView(BRect(20, start_y, 600, start_y+kGuiHeight), nullptr, B_TRANSLATE("Export File"));
 	title->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	title->SetFont(be_bold_font);
 	AddChild(title);
 	start_y += kGuiHeight;
 
 	BButton *select_file_button = new BButton(BRect(20, start_y, 200, start_y+kGuiHeight), nullptr,
-									   GetText(TXT_EXPORT_OUT_SAVE_FILE), new BMessage(kMsgSelectFileButton));
+									   B_TRANSLATE("Select Out File"), new BMessage(kMsgSelectFileButton));
 	fBackgroundView->AddChild(select_file_button);
 
 	//	TODO cache out file
@@ -506,7 +509,7 @@ float ExportMediaWindow :: CreateFileSaveGui(float start_y)
 	start_y += kGuiHeight + 2*kGuiOffset;
 
 	//`Start encode button
-	fButtonStartEncode = new BButton(BRect(430, start_y, 630, start_y+kGuiHeight), nullptr, GetText(TXT_EXPORT_OUT_START_BUTTON), new BMessage(kMsgStartEncode));
+	fButtonStartEncode = new BButton(BRect(430, start_y, 630, start_y+kGuiHeight), nullptr, B_TRANSLATE("Start"), new BMessage(kMsgStartEncode));
 	fBackgroundView->AddChild(fButtonStartEncode);
 
 	//	Export progress
@@ -618,7 +621,7 @@ void ExportMediaWindow :: MessageReceived(BMessage *msg)
 								true,			//	modal
 								true);			//	hideWhenDone
 				fFilePanel->SetButtonLabel(B_DEFAULT_BUTTON, "Save");
-				fFilePanel->Window()->SetTitle(GetText(TXT_EXPORT_OUT_SAVE_FILE));
+				fFilePanel->Window()->SetTitle(B_TRANSLATE("Select Out File"));
 				fFilePanel->SetTarget(this);
 				fFilePanel->Show();
 			}
@@ -723,7 +726,7 @@ void ExportMediaWindow :: ValidateTextField(BTextControl *control, uint32 what)
 	}
 
 	BAlert *alert = new BAlert(nullptr,
-							   even_error ? GetText(TXT_EXPORT_INVALID_EVEN_NUMBER) : GetText(TXT_EXPORT_INVALID_NUMBER),
+							   even_error ? B_TRANSLATE("Invalid input - only even numbers are valid.") : B_TRANSLATE("Invalid input - not a valid number."),
 							   "OK", nullptr, nullptr, B_WIDTH_AS_USUAL, B_WARNING_ALERT);
 	alert->Go();
 
@@ -915,7 +918,7 @@ uint32 ExportMediaWindow :: GetSelectedAudioBitrate() const
 void ExportMediaWindow :: StartEncode()
 {
 	fExportEngine->StartEncode();
-	fButtonStartEncode->SetLabel(GetText(TXT_EXPORT_OUT_CANCEL_BUTTON));
+	fButtonStartEncode->SetLabel(B_TRANSLATE("Cancel"));
 	fState = STATE_ENCODING;
 	AddChild(fExportProgressBar);
 	RemoveChild(fTextExportProgress);
@@ -933,9 +936,9 @@ void ExportMediaWindow :: StopEncode(const bool complete)
 	fExportEngine->StopEncode(complete);
 	RemoveChild(fExportProgressBar);
 	fState = STATE_INPUT;
-	fButtonStartEncode->SetLabel(GetText(TXT_EXPORT_OUT_START_BUTTON));
+	fButtonStartEncode->SetLabel(B_TRANSLATE("Start"));
 	if (complete)
-		fTextExportProgress->SetText(GetText(TXT_EXPORT_OUT_PROGRESS_COMPLETE));
+		fTextExportProgress->SetText(B_TRANSLATE("Complete"));
 	else
-		fTextExportProgress->SetText(GetText(TXT_EXPORT_OUT_PROGRESS_CANCELLED));
+		fTextExportProgress->SetText(B_TRANSLATE("Cancelled"));
 }

@@ -15,13 +15,16 @@
 #endif
 
 #include "ImageUtility.h"
-#include "Language.h"
 #include "MediaSource.h"
 #include "MedoWindow.h"
 #include "SourceListView.h"
 #include "Theme.h"
 #include "TimelineEdit.h"
 #include "VideoManager.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "SourceListView"
 
 /*********************************
 	SourceListItem
@@ -199,7 +202,7 @@ public:
 	{
 		parent->MovePenTo(10, frame.bottom);
 		parent->SetHighColor(Theme::GetUiColour(UiColour::eListText));
-		parent->DrawString(GetText(TXT_MENU_PROJECT_ADD_SOURCE));
+		parent->DrawString(B_TRANSLATE("Add Source (Media)"));
 	}
 };
 

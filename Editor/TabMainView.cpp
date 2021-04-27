@@ -13,10 +13,13 @@
 #include "EffectsTab.h"
 #include "TextTab.h"
 #include "Gui/ListViewToolTip.h"
-#include "Language.h"
 #include "SourceListView.h"
 #include "MediaSource.h"
 #include "EffectNode.h"
+#include <Catalog.h>
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "TabMainView"
 
 enum kMsgSelectTab
 {
@@ -40,7 +43,7 @@ TabMainView :: TabMainView(BRect tab_frame)
 	
 	//	TAB_SOURCE
 	fSourceView = new SourceListView(BRect(tab_frame.left, tab_frame.top, tab_frame.right, tab_frame.bottom - TabHeight()), "SourceTab", text_func);
-	fSourceScrollView = new BScrollView(GetText(TXT_TAB_MEDIA_SOURCES), fSourceView, B_FOLLOW_LEFT_TOP, 0, false, true);
+	fSourceScrollView = new BScrollView(B_TRANSLATE("Media"), fSourceView, B_FOLLOW_LEFT_TOP, 0, false, true);
 	AddTab(fSourceScrollView);
 	fSourceScrollView->ScrollBar(B_VERTICAL)->SetRange(0.0f, 0.0f);
 	
