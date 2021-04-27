@@ -28,9 +28,9 @@
 
 static const char *kThemes[] =
 {
-	"Dark",
-	"Lite",
-	"System",
+	B_TRANSLATE("Dark"),
+	B_TRANSLATE("Lite"),
+	B_TRANSLATE("System"),
 };
 
 GlobalSettings :: GlobalSettings()
@@ -185,7 +185,7 @@ public:
 			fAppearancePopupTheme = new BOptionPopUp(BRect(20, 20, 320, 60), "theme", B_TRANSLATE("Theme"), new BMessage(eMsgAppearanceTheme));
 			for (size_t i=0; i < sizeof(kThemes)/sizeof(char *); i++)
 			{
-				fAppearancePopupTheme->AddOption(GetText((LANGUAGE_TEXT)(TXT_SETTINGS_APPEARANCE_THEME_DARK + i)), i);
+				fAppearancePopupTheme->AddOption(GetText((LANGUAGE_TEXT)(kThemes[i], i);
 			}
 			fAppearancePopupTheme->SelectOptionFor((int)Theme::GetTheme());
 			tab_appearance->AddChild(fAppearancePopupTheme);
