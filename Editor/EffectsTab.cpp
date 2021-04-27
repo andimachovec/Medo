@@ -3,7 +3,7 @@
  *	COPYRIGHT:		Zen Yes Pty Ltd, 2019-2021
  *	DESCRIPTION:	Tab effects
  */
- 
+
 #include <cstdio>
 #include <cassert>
 
@@ -142,7 +142,7 @@ EffectsTab :: EffectsTab(BRect tab_frame)
 
 	assert(gEffectsManager == nullptr);
 	gEffectsManager = new EffectsManager(BRect(0, 0, 740*kFontFactor, 700));
-	
+
 	BRect bframe = Bounds();
 	fOutlineListView = new DraggerOutlineListView(BRect(bframe.left, bframe.top, bframe.right, bframe.bottom), "EffectsListView", this);
 	fMsgWindowNotification = new BMessage(MedoWindow::eMsgActionTabEffectSelected);
@@ -154,11 +154,19 @@ EffectsTab :: EffectsTab(BRect tab_frame)
 	fOutlineListView->SetViewColor(Theme::GetUiColour(UiColour::eListBackground));
 
 	//	Populate items
+	std::vector<const char*> group_names;
+	group_names.push_back(B_TRANSLATE("Spatial"));
+	group_names.push_back(B_TRANSLATE("Color"));
+	group_names.push_back(B_TRANSLATE("Image"));
+	group_names.push_back(B_TRANSLATE("Transistion"));
+	group_names.push_back(B_TRANSLATE("Special Effects"));
+	group_names.push_back(B_TRANSLATE("Audio"));
+
 	std::vector<BStringItem *>	groups;
 	std::vector<BListItem *> sort_superitems;
 	for (int g=0; g < EffectNode::NUMBER_EFFECT_GROUPS - 1; g++)
 	{
-		BStringItem *group = new BStringItem(GetText((LANGUAGE_TEXT)(TXT_TAB_EFFECTS_SPATIAL + g)));
+		BStringItem *group = new BStringItem(group_names[g]);
 		groups.push_back(group);
 		fOutlineListView->AddItem(group);
 		fOutlineListView->Collapse(fOutlineListView->ItemAt(g));
