@@ -36,10 +36,8 @@ Main Medo :
 	Editor/ExportMediaWindow.cpp
 	Editor/FileUtility.cpp
 	Editor/ImageUtility.cpp
-	Editor/Language.cpp
-	Editor/LanguageJson.cpp
 	Editor/Main.cpp
-	Editor/MediaUtility.cpp 
+	Editor/MediaUtility.cpp
 	Editor/MediaSource.cpp
 	Editor/MedoApplication.cpp
 	Editor/MedoWindow.cpp
@@ -162,11 +160,11 @@ Main Medo :
 	Yarra/FreeTypeGL/libtess/libtess_sweep.cpp
 	Yarra/FreeTypeGL/libtess/libtess_tess.cpp
 	Yarra/FreeTypeGL/libtess/libtess_tessmono.cpp
-	
+
 #3rdParty
 	3rdParty/LutCube.cpp
 	3rdParty/stb_image_write.cpp
-		
+
 # </pe-src>
 ;
 
